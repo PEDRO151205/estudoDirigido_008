@@ -1,49 +1,213 @@
-# Hands-On — Populando o Banco de Dados do PATRI-TECH via `/admin`
+# 🏛️ PATRI-TECH — Backend Profissional com Django e DRF
 
-## Visão Geral
+Este **estudo dirigido** tem como objetivo **fixar o processo inicial de criação e configuração de um backend profissional**, utilizando **Python, Django, Django REST Framework, Git e GitFlow**.
 
-Este hands-on demonstra **como funciona o processo de cadastro inicial de dados** no sistema **PATRI-TECH**, utilizando o **painel administrativo do Django**. Esses cadastros são fundamentais para que a API funcione corretamente e para que o inventário patrimonial mantenha **padronização, rastreabilidade e consistência**.
-
-O fluxo apresentado segue uma **ordem lógica de dependência entre entidades**, evitando erros de relacionamento e garantindo que os bens possam ser corretamente associados.
+Ao final deste estudo, você será capaz de **iniciar qualquer projeto backend** aplicando **boas práticas reais de engenharia de software**, desde a estruturação do projeto até a validação da API e documentação.
 
 ---
 
-## Objetivo do Hands-On
+## 🚀 Criação do Servidor Django
 
-Ao final deste procedimento, você será capaz de:
+Esta seção descreve **como criar e executar o servidor Django desde o zero**, seguindo boas práticas de backend profissional.
+
+---
+
+### 1️⃣ Pré-requisitos
+
+Certifique-se de ter instalado:
+
+* Python 3.10+
+* pip (gerenciador de pacotes do Python)
+* Git
+* Ambiente virtual (venv)
+
+Verifique as versões:
+
+```bash
+python --version
+pip --version
+git --version
+```
+
+---
+
+### 2️⃣ Criação do Ambiente Virtual
+
+Crie e ative um ambiente virtual para isolar as dependências do projeto:
+
+```bash
+python -m venv venv
+```
+
+Ativação:
+
+**Windows**
+
+```bash
+venv\Scripts\activate
+```
+
+**Linux / macOS**
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+### 3️⃣ Instalação das Dependências
+
+Com o ambiente virtual ativado, instale os principais pacotes:
+
+```bash
+pip install django djangorestframework
+```
+
+(Opcional, mas recomendado)
+
+```bash
+pip install drf-spectacular
+```
+
+---
+
+### 4️⃣ Criação do Projeto Django
+
+Crie o projeto principal:
+
+```bash
+django-admin startproject patri_tech
+cd patri_tech
+```
+
+Estrutura inicial:
+
+```text
+patri_tech/
+├── manage.py
+└── patri_tech/
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    ├── asgi.py
+    └── wsgi.py
+```
+
+---
+
+### 5️⃣ Criação da Aplicação (App)
+
+Crie a aplicação responsável pelo domínio do sistema:
+
+```bash
+python manage.py startapp core
+```
+
+Adicione o app em `settings.py`:
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    'rest_framework',
+    'core',
+]
+```
+
+---
+
+### 6️⃣ Migrações Iniciais
+
+Crie e aplique as migrações do banco de dados:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+---
+
+### 7️⃣ Criação do Usuário Administrador
+
+Crie o superusuário para acesso ao Django Admin:
+
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+### 8️⃣ Executando o Servidor
+
+Inicie o servidor de desenvolvimento:
+
+```bash
+python manage.py runserver
+```
+
+Acesse no navegador:
+
+* Admin Django: `http://127.0.0.1:8000/admin/`
+* API (futuro): `http://127.0.0.1:8000/api/`
+
+---
+
+### 9️⃣ Boas Práticas Adotadas
+
+* Uso de ambiente virtual
+* Separação por apps
+* Dependências versionadas
+* Estrutura preparada para API REST
+
+---
+
+## 📦 População Inicial do Banco de Dados
+
+Este repositório documenta o **processo oficial de população inicial do banco de dados** do sistema **PATRI-TECH**, utilizando o **painel administrativo do Django** (`/admin`).
+
+Este procedimento é essencial para garantir o correto funcionamento da **API REST**, a **padronização do inventário patrimonial** e a **consistência dos dados**.
+
+---
+
+## 📌 Objetivo
+
+Ao seguir este guia, você será capaz de:
 
 * Acessar o painel administrativo do Django
-* Criar os registros básicos do sistema
+* Cadastrar os dados essenciais do sistema
 * Aplicar regras de padronização patrimonial
-* Validar os dados via API REST
-* Conferir a documentação interativa no Swagger
+* Validar os dados via API
+* Conferir os endpoints no Swagger
 
 ---
 
-## 1. Acesso ao Painel Administrativo
+## 🔐 Acesso ao Painel Administrativo
 
-O painel administrativo é a interface padrão do Django para **gerenciamento direto do banco de dados**.
+O Django Admin é utilizado para o gerenciamento direto das entidades do sistema.
 
-**Endereço:**
-
-```
+```bash
 http://127.0.0.1:8000/admin/
 ```
 
-**Acesso:**
-
-* Utilize o usuário administrador criado previamente com:
-
-  ```bash
-  python manage.py createsuperuser
-  ```
-* Este comando é apenas uma referência; o login deve ser feito pela interface web.
+> 🔎 **Observação:**
+> O usuário administrador deve ser criado previamente com:
+>
+> ```bash
+> python manage.py createsuperuser
+> ```
+>
+> (Comando apenas como referência.)
 
 ---
 
-## 2. Ordem Correta de Cadastro (Regra de Dependência)
+## 🔗 Ordem Correta de Cadastro
 
-A ordem de cadastro é essencial porque algumas entidades **dependem de outras**:
+A ordem de cadastro deve ser seguida rigorosamente, pois existem **dependências entre as entidades**:
 
 1. Categorias
 2. Status
@@ -51,166 +215,134 @@ A ordem de cadastro é essencial porque algumas entidades **dependem de outras**
 4. Salas
 5. Bens
 
-➡️ Exemplo: um **Bem** depende de Categoria, Status, Unidade e Sala já existentes.
+➡️ Um **Bem** depende da existência de Categoria, Status, Unidade e Sala.
 
 ---
 
-## 3. Cadastro de Categorias
+## 🗂️ Cadastro de Categorias
 
-### O que é uma Categoria?
-
-Define o **grupo patrimonial** ao qual um bem pertence.
+As categorias representam os **grupos patrimoniais**.
 
 ### Exemplos
 
-* Informática – Equipamentos de TI
-* Mobiliário – Mesas, cadeiras, armários
-* Eletrodomésticos – Geladeiras, micro-ondas
-* Veículos – Carros, motos
-* Ferramentas – Equipamentos de manutenção
+* Informática
+* Mobiliário
+* Eletrodomésticos
+* Veículos
+* Ferramentas
 
-### Lei de Formação
+### Regra de Padronização
 
-* Nome no **singular**
-* Representa um **grupo**, não um item específico
-* Fácil entendimento para usuários e relatórios
-
-➡️ A categoria será reutilizada em diversos bens.
+* Nome no singular
+* Representa um grupo, não um item
+* Fácil entendimento
 
 ---
 
-## 4. Cadastro de Status
+## 🔄 Cadastro de Status
 
-### O que é Status?
-
-Indica a **situação atual do bem** no inventário.
+O status indica a **situação atual do bem**.
 
 ### Exemplos
 
-* Em uso – Bem ativo
-* Em manutenção – Aguardando reparo
-* Baixado – Retirado do patrimônio
-* Extraviado – Não localizado
-* Novo – Recém adquirido
+* Em uso
+* Em manutenção
+* Baixado
+* Extraviado
+* Novo
 
-### Lei de Formação
+### Regra de Padronização
 
 * Estado claro e objetivo
-* Preferencialmente iniciado por ação ou condição
-
-➡️ O status permite controle operacional e relatórios gerenciais.
+* Fácil interpretação em relatórios
 
 ---
 
-## 5. Cadastro de Unidades
+## 🏢 Cadastro de Unidades
 
-### O que é uma Unidade?
-
-Representa uma **localização organizacional ou física** da instituição.
+As unidades representam **locais físicos ou organizacionais**.
 
 ### Exemplos
 
-* Sede – SED-001 – Rua Central, 100
-* Anexo – ANX-002 – Rua B, 222
-* Polo Regional 1 – PR1-003 – Bairro Norte
-* Almoxarifado Central – ALM-004 – Avenida Sul
+* Sede — `SED-001`
+* Anexo — `ANX-002`
+* Polo Regional 1 — `PR1-003`
+* Almoxarifado Central — `ALM-004`
 
-### Lei de Formação
+### Regra de Padronização
 
-* Nome curto e identificável
-* Código no formato `ABC-123`
-* Código **único** por unidade
-
-➡️ O código da unidade será usado na formação do **tombo patrimonial**.
+* Nome curto
+* Código único no formato `ABC-123`
 
 ---
 
-## 6. Cadastro de Salas
+## 🚪 Cadastro de Salas
 
-### O que é uma Sala?
-
-Indica o **local específico dentro de uma unidade** onde o bem está alocado.
+As salas indicam a **localização específica do bem dentro da unidade**.
 
 ### Exemplos
 
-* Sala 101 – Sede – Atendimento
-* Sala 102 – Sede – Reuniões
-* TI – Suporte – Sede – Área de TI
-* Almoxarifado – Anexo – Estoque
-* Administrativo – Polo Regional 1
+* Sala 101 — Atendimento
+* Sala 102 — Reuniões
+* TI — Área de Tecnologia
+* Almoxarifado — Estoque
+* Administrativo
 
-### Lei de Formação
+### Regra de Padronização
 
-* Usar "Sala XXX" para ambientes numerados
-* Nome funcional para setores específicos
-
-➡️ As salas facilitam o controle físico e auditorias patrimoniais.
+* Utilizar "Sala XXX" para ambientes numerados
+* Nomes funcionais para setores
 
 ---
 
-## 7. Cadastro de Bens
+## 💻 Cadastro de Bens
 
-### O que é um Bem?
+Os bens são os **itens patrimoniais individualizados**.
 
-É o **item patrimonial individual**, controlado e rastreado pelo sistema.
+### Exemplo — Notebook
 
-### Exemplo 1 — Notebook
+* **Nome:** Notebook Dell Latitude 5400
+* **Tombo:** `NB-SED-001`
+* **Categoria:** Informática
+* **Status:** Em uso
+* **Unidade:** Sede
+* **Sala:** Sala 101
+* **Valor estimado:** 4800.00
 
-* Nome: Notebook Dell Latitude 5400
-* Tombo: NB-SED-001
-* Categoria: Informática
-* Status: Em uso
-* Unidade: Sede
-* Sala: Sala 101
-* Valor estimado: 4800.00
+### Exemplo — Mesa
 
-### Exemplo 2 — Mesa
-
-* Nome: Mesa de Escritório
-* Tombo: MOB-ANX-014
-* Categoria: Mobiliário
-* Status: Em uso
-* Unidade: Anexo
-* Sala: Almoxarifado
-
-### Exemplo 3 — Geladeira
-
-* Nome: Geladeira Consul FrostFree
-* Tombo: ELT-PR1-007
-* Categoria: Eletrodomésticos
-* Status: Em manutenção
-* Unidade: Polo Regional 1
-* Sala: Administrativo
+* **Nome:** Mesa de Escritório
+* **Tombo:** `MOB-ANX-014`
+* **Categoria:** Mobiliário
+* **Status:** Em uso
+* **Unidade:** Anexo
+* **Sala:** Almoxarifado
 
 ---
 
-## 8. Lei de Formação do Tombo Patrimonial
+## 🏷️ Padrão de Tombo Patrimonial
 
-### Formato Padrão
+Formato obrigatório:
 
-```
+```text
 TIPO-UNIDADE-NÚMERO
 ```
 
 ### Exemplos
 
-* NB-SED-001
-* MOB-ANX-014
-* ELT-PR1-007
+* `NB-SED-001`
+* `MOB-ANX-014`
+* `ELT-PR1-007`
 
-➡️ Esse padrão garante:
-
-* Identificação rápida do tipo de bem
-* Associação direta à unidade
-* Numeração sequencial controlada
+Esse padrão garante rastreabilidade e organização do inventário.
 
 ---
 
-## 9. Validação dos Dados na API
+## 🔌 Validação da API
 
-Após os cadastros, valide se a API está retornando corretamente:
+Após o cadastro, valide os endpoints:
 
-```
+```text
 /api/categorias/
 /api/status/
 /api/unidades/
@@ -218,34 +350,39 @@ Após os cadastros, valide se a API está retornando corretamente:
 /api/bens/
 ```
 
-➡️ Todas as rotas devem retornar listas JSON com os dados cadastrados.
+Todos devem retornar dados em formato JSON.
 
 ---
 
-## 10. Validação no Swagger
+## 📖 Documentação Swagger
 
-Acesse a documentação interativa:
+A documentação interativa da API pode ser acessada em:
 
-```
+```bash
 http://127.0.0.1:8000/docs/
 ```
 
 No Swagger é possível:
 
-* Visualizar todos os endpoints
-* Testar requisições GET, POST, PUT e DELETE
-* Confirmar relacionamentos entre entidades
+* Visualizar os endpoints
+* Testar requisições
+* Validar relacionamentos
 
 ---
 
-## Checklist Final
+## ✅ Checklist Final
 
-* Categorias criadas
-* Status cadastrados
-* Unidades com código único
-* Salas associadas corretamente
-* Bens registrados com tombo válido
-* API retornando dados
-* Swagger funcionando corretamente
+* [x] Categorias cadastradas
+* [x] Status cadastrados
+* [x] Unidades com código único
+* [x] Salas associadas corretamente
+* [x] Bens cadastrados
+* [x] API retornando dados
+* [x] Swagger funcionando
 
-✅ Com isso, o banco de dados do PATRI-TECH estará corretamente populado e pronto para uso.
+---
+
+📌 **Conclusão**
+
+Com este processo concluído, o **PATRI-TECH** estará com o banco de dados corretamente populado e pronto para uso em ambiente de desenvolvimento ou demonstração.
+
